@@ -1,10 +1,15 @@
 require 'active_record'
 require 'json'
 require 'yaml'
+require 'base64'
 
 ENV["RAILS_ENV"] = "test"
 
 ActiveRecord::Base.time_zone_aware_attributes = ENV['TIMEZONE_AWARE'] != '0'
+permitted_classes = [Symbol, Date, Time, BigDecimal, ActiveSupport::HashWithIndifferentAccess]
+ActiveRecord::Base.yaml_column_permitted_classes = permitted_classes if ActiveRecord::Base.respond_to? :yaml_column_permitted_classes
+ActiveRecord.yaml_column_permitted_classes = permitted_classes if ActiveRecord.respond_to? :yaml_column_permitted_classes
+
 credentials = { 'database' => 'typed_store_test', 'username' => 'typed_store', 'password' => 'typed_store' }
 ActiveRecord::Base.configurations = {
   test: {
